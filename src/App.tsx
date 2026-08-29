@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
+import PluralScrollbar from './components/PluralScrollbar';
 import Home from './pages/Home';
 import PlansPage from './pages/PlansPage';
 import CatalogPage from './pages/CatalogPage';
@@ -37,6 +38,7 @@ function App() {
               <Route path="/suporte" element={<SupportPage />} />
             </Routes>
             <Footer />
+            <PluralScrollbar />
             <ScrollToTop />
           </div>
         </Router>

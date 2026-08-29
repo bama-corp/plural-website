@@ -1,12 +1,20 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
+const devSecurityHeaders = {
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'DENY',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
+};
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
     port: 3000,
     open: true,
+    headers: devSecurityHeaders,
     hmr: {
       overlay: false,
     },
@@ -27,6 +35,7 @@ export default defineConfig({
     },
   },
   preview: {
+    headers: devSecurityHeaders,
     proxy: {
       '/api/youtube-channel': {
         target: 'https://www.youtube.com',
@@ -49,20 +58,17 @@ export default defineConfig({
     rollupOptions: {
       output: {
         assetFileNames: assetInfo => {
-          const info = assetInfo.name.split('.');
-          const ext = info[info.length - 1];
-          
-          // Preserve favicon and icon files in root
-          if (/^(favicon|icon-).*\.(ico|png)$/i.test(assetInfo.name)) {
+          const name = assetInfo.names?.[0] ?? assetInfo.name ?? '';
+
+          if (/^(favicon|icon-).*\.(ico|png)$/i.test(name)) {
             return `[name][extname]`;
           }
-          
-          // Move other images to images folder
-          if (/\.(png|jpe?g|svg|gif|tiff|bmp)$/i.test(assetInfo.name)) {
+
+          if (/\.(png|jpe?g|svg|gif|tiff|bmp)$/i.test(name)) {
             return `images/[name]-[hash][extname]`;
           }
-          
-          if (/\.css$/i.test(assetInfo.name)) {
+
+          if (/\.css$/i.test(name)) {
             return `css/[name]-[hash][extname]`;
           }
           return `assets/[name]-[hash][extname]`;

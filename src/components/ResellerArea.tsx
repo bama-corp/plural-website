@@ -4,6 +4,15 @@ import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
 import { openWhatsApp } from '../utils/helpers';
 import { contactInfo } from '../data/mockData';
 import TextReel from './TextReel';
+import HoneypotField from './HoneypotField';
+import {
+  canSubmitForm,
+  isHoneypotFilled,
+  isValidEmail,
+  isValidPhone,
+  markFormSubmitted,
+  sanitizeText,
+} from '../utils/formGuard';
 
 const kz = (value: number) => `${value.toLocaleString('pt-PT')} Kz`;
 
@@ -184,6 +193,8 @@ const ResellerArea = () => {
     message: '',
     acceptTerms: false,
   });
+  const [honeypot, setHoneypot] = useState('');
+  const [formError, setFormError] = useState('');
 
   const selected = tiers.find(tier => tier.id === selectedId) ?? tiers[3];
 
@@ -193,16 +204,46 @@ const ResellerArea = () => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+    const name = sanitizeText(formData.name, 80);
+    const email = sanitizeText(formData.email, 254);
+    const whatsapp = sanitizeText(formData.whatsapp, 20);
+    const experience = sanitizeText(formData.experience, 400);
+    const howDidYouKnow = sanitizeText(formData.howDidYouKnow, 40);
+    const note = sanitizeText(formData.message, 500);
+
+    if (!name || !isValidEmail(email) || !isValidPhone(whatsapp)) {
+      setFormError('Confirma o nome, um e-mail válido e o WhatsApp.');
+      return;
+    }
+    if (!canSubmitForm()) {
+      setFormError('Espera uns segundos e tenta de novo.');
+      return;
+    }
+    if (isHoneypotFilled(honeypot)) {
+      setFormData({
+        name: '',
+        email: '',
+        whatsapp: '',
+        experience: '',
+        howDidYouKnow: '',
+        message: '',
+        acceptTerms: false,
+      });
+      return;
+    }
+
+    markFormSubmitted();
+    setFormError('');
     const message = [
       'Candidatura a revendedor Plural.',
       '',
       `Nível: ${selected.name}`,
-      `Nome: ${formData.name}`,
-      `E-mail: ${formData.email}`,
-      `WhatsApp: ${formData.whatsapp}`,
-      `Experiência: ${formData.experience || 'Não indicada'}`,
-      `Como conheceu: ${formData.howDidYouKnow || 'Não indicado'}`,
-      `Mensagem: ${formData.message || '—'}`,
+      `Nome: ${name}`,
+      `E-mail: ${email}`,
+      `WhatsApp: ${whatsapp}`,
+      `Experiência: ${experience || 'Não indicada'}`,
+      `Como conheceu: ${howDidYouKnow || 'Não indicado'}`,
+      `Mensagem: ${note || '—'}`,
     ].join('\n');
     openWhatsApp(contactInfo.whatsapp, message);
     setFormData({
@@ -214,6 +255,7 @@ const ResellerArea = () => {
       message: '',
       acceptTerms: false,
     });
+    setHoneypot('');
   };
 
   return (
@@ -411,7 +453,11 @@ const ResellerArea = () => {
             próximos passos.
           </p>
 
-          <form onSubmit={handleSubmit} className="mt-10 space-y-6">
+          <form onSubmit={handleSubmit} className="relative mt-10 space-y-6">
+            <HoneypotField value={honeypot} onChange={setHoneypot} />
+            {formError ? (
+              <p className="text-sm text-white/70">{formError}</p>
+            ) : null}
             <div>
               <label htmlFor="reseller-name" className="mb-2 block text-sm text-white/55">
                 Nome completo
@@ -420,6 +466,7 @@ const ResellerArea = () => {
                 id="reseller-name"
                 type="text"
                 required
+                maxLength={80}
                 value={formData.name}
                 onChange={event =>
                   setFormData({ ...formData, name: event.target.value })
@@ -437,6 +484,7 @@ const ResellerArea = () => {
                   id="reseller-email"
                   type="email"
                   required
+                  maxLength={254}
                   value={formData.email}
                   onChange={event =>
                     setFormData({ ...formData, email: event.target.value })
@@ -452,6 +500,7 @@ const ResellerArea = () => {
                   id="reseller-whatsapp"
                   type="tel"
                   required
+                  maxLength={20}
                   value={formData.whatsapp}
                   onChange={event =>
                     setFormData({ ...formData, whatsapp: event.target.value })
@@ -468,6 +517,7 @@ const ResellerArea = () => {
               <textarea
                 id="reseller-experience"
                 rows={3}
+                maxLength={400}
                 value={formData.experience}
                 onChange={event =>
                   setFormData({ ...formData, experience: event.target.value })
@@ -516,6 +566,7 @@ const ResellerArea = () => {
               <textarea
                 id="reseller-message"
                 rows={4}
+                maxLength={500}
                 value={formData.message}
                 onChange={event =>
                   setFormData({ ...formData, message: event.target.value })

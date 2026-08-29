@@ -3,6 +3,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Check, Gift } from 'lucide-react';
 import { openWhatsApp } from '../utils/helpers';
 import { contactInfo } from '../data/mockData';
+import HoneypotField from './HoneypotField';
+import {
+  canSubmitForm,
+  isHoneypotFilled,
+  isValidEmail,
+  isValidPhone,
+  markFormSubmitted,
+  sanitizeText,
+} from '../utils/formGuard';
 
 interface FreeTrialModalProps {
   isOpen: boolean;
@@ -17,10 +26,38 @@ const FreeTrialModal = ({ isOpen, onClose }: FreeTrialModalProps) => {
     device: '',
     acceptTerms: false,
   });
+  const [honeypot, setHoneypot] = useState('');
+  const [error, setError] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const message = `Olá! Gostaria de iniciar meu teste grátis de 24 horas.\n\nNome: ${formData.name}\nEmail: ${formData.email}\nWhatsApp: ${formData.whatsapp}\nDispositivo: ${formData.device}`;
+    const name = sanitizeText(formData.name, 80);
+    const email = sanitizeText(formData.email, 254);
+    const whatsapp = sanitizeText(formData.whatsapp, 20);
+    const device = sanitizeText(formData.device, 40);
+
+    if (!name || !isValidEmail(email) || !isValidPhone(whatsapp) || !device) {
+      setError('Confirma o nome, e-mail, WhatsApp e o dispositivo.');
+      return;
+    }
+    if (!canSubmitForm()) {
+      setError('Espera uns segundos e tenta de novo.');
+      return;
+    }
+    if (isHoneypotFilled(honeypot)) {
+      onClose();
+      return;
+    }
+
+    markFormSubmitted();
+    const message = [
+      'Olá! Quero o teste grátis de 24 horas.',
+      '',
+      `Nome: ${name}`,
+      `E-mail: ${email}`,
+      `WhatsApp: ${whatsapp}`,
+      `Dispositivo: ${device}`,
+    ].join('\n');
     openWhatsApp(contactInfo.whatsapp, message);
     onClose();
   };
@@ -127,7 +164,11 @@ const FreeTrialModal = ({ isOpen, onClose }: FreeTrialModalProps) => {
                     <h3 className="text-lg font-bold text-white mb-4">
                       Preencha seus dados
                     </h3>
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="relative space-y-4">
+                      <HoneypotField value={honeypot} onChange={setHoneypot} />
+                      {error ? (
+                        <p className="text-sm text-white/70">{error}</p>
+                      ) : null}
                       <div>
                         <label className="block text-sm font-semibold text-gray-300 mb-2">
                           Nome Completo *
@@ -135,9 +176,10 @@ const FreeTrialModal = ({ isOpen, onClose }: FreeTrialModalProps) => {
                         <input
                           type="text"
                           required
+                          maxLength={80}
                           value={formData.name}
                           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          placeholder="Seu nome completo"
+                          placeholder="O teu nome completo"
                           className="w-full px-4 py-3 rounded border border-gray-800 bg-gray-800/50 text-white placeholder-gray-500 focus:ring-2 focus:ring-white focus:border-white transition-colors"
                         />
                       </div>
@@ -151,8 +193,9 @@ const FreeTrialModal = ({ isOpen, onClose }: FreeTrialModalProps) => {
                             type="email"
                             required
                             value={formData.email}
+                            maxLength={254}
                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                            placeholder="seu@email.com"
+                            placeholder="o.teu@email.com"
                             className="w-full px-4 py-3 rounded border border-gray-800 bg-gray-800/50 text-white placeholder-gray-500 focus:ring-2 focus:ring-white focus:border-white transition-colors"
                           />
                         </div>
@@ -164,6 +207,7 @@ const FreeTrialModal = ({ isOpen, onClose }: FreeTrialModalProps) => {
                             type="tel"
                             required
                             value={formData.whatsapp}
+                            maxLength={20}
                             onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
                             placeholder="+244 900 000 000"
                             className="w-full px-4 py-3 rounded border border-gray-800 bg-gray-800/50 text-white placeholder-gray-500 focus:ring-2 focus:ring-white focus:border-white transition-colors"

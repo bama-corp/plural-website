@@ -2,24 +2,44 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { openWhatsApp } from '../utils/helpers';
 import { contactInfo, socialMedia } from '../data/mockData';
+import HoneypotField from './HoneypotField';
+import {
+  canSubmitForm,
+  isHoneypotFilled,
+  isValidEmail,
+  markFormSubmitted,
+  sanitizeText,
+} from '../utils/formGuard';
 import pluralMark from '../assets/images/logos/plural-mark.png';
 import pluralWordmark from '../assets/images/logos/plural-wordmark.png';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   const [email, setEmail] = useState('');
+  const [honeypot, setHoneypot] = useState('');
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   const handleNewsletter = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) {
+    const clean = sanitizeText(email, 254);
+    if (!isValidEmail(clean)) {
       setStatus('error');
       return;
     }
+    if (!canSubmitForm()) {
+      setStatus('error');
+      return;
+    }
+    if (isHoneypotFilled(honeypot)) {
+      setStatus('success');
+      setEmail('');
+      return;
+    }
 
+    markFormSubmitted();
     openWhatsApp(
       contactInfo.whatsapp,
-      `📧 NOVA INSCRIÇÃO NA NEWSLETTER PLURAL\n\nE-mail: ${email}\n\nData: ${new Date().toLocaleDateString('pt-AO')}`
+      `Nova inscrição na newsletter Plural.\n\nE-mail: ${clean}`
     );
     setStatus('success');
     setEmail('');
@@ -39,10 +59,13 @@ const Footer = () => {
               Novidades, conteúdos e ofertas. Sem spam.
             </p>
           </div>
-          <form onSubmit={handleNewsletter} className="flex flex-col sm:flex-row gap-3">
+          <form onSubmit={handleNewsletter} className="relative flex flex-col sm:flex-row gap-3">
+            <HoneypotField value={honeypot} onChange={setHoneypot} />
             <input
               type="email"
               value={email}
+              maxLength={254}
+              autoComplete="email"
               onChange={e => setEmail(e.target.value)}
               placeholder="O teu e-mail"
               className="flex-1 rounded-md border border-white/15 bg-white/5 px-4 py-3 text-white placeholder:text-white/35 outline-none focus:border-white"
