@@ -30,9 +30,72 @@ const parseChannelVideoIds = (html: string, limit: number) => {
   return ids.slice(0, limit);
 };
 
+const HERO_STORE = 'plural.yt.hero.v1';
+/** Homepage front video: re-check the channel featured clip every 20 days. */
+export const HERO_VIDEO_TTL_MS = 20 * 24 * 60 * 60 * 1000;
+
+type HeroStore = { id: string; at: number };
+
+const readHeroStore = (): HeroStore | null => {
+  try {
+    const stored = JSON.parse(localStorage.getItem(HERO_STORE) ?? 'null') as HeroStore | null;
+    if (!stored?.id) return null;
+    return stored;
+  } catch {
+    return null;
+  }
+};
+
+const writeHeroStore = (id: string) => {
+  if (!id) return;
+  try {
+    localStorage.setItem(HERO_STORE, JSON.stringify({ id, at: Date.now() } satisfies HeroStore));
+  } catch {
+    /* quota / private mode */
+  }
+};
+
+/** Last known front video, even if the 20-day window already expired. */
+export const peekHeroVideoId = (): string =>
+  readHeroStore()?.id ?? INGRESSO_FEATURED_FALLBACK_ID;
+
+export const heroVideoRefreshDelayMs = (): number => {
+  const stored = readHeroStore();
+  if (!stored?.id) return 0;
+  return Math.max(0, HERO_VIDEO_TTL_MS - (Date.now() - stored.at));
+};
+
+async function pullIngressoFeaturedVideoId(): Promise<string | null> {
+  try {
+    const response = await fetch(`/api/yt-channel/${encodeURIComponent('ingresso-com')}`);
+    if (!response.ok) return null;
+    return parseChannelVideoIds(await response.text(), 1)[0] ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/** Fetch the channel featured video and stamp a new 20-day window. */
+export async function refreshHeroVideoId(): Promise<string> {
+  const next = await pullIngressoFeaturedVideoId();
+  if (next) {
+    writeHeroStore(next);
+    return next;
+  }
+  return peekHeroVideoId();
+}
+
+/**
+ * Cached featured video while the 20-day window is valid.
+ * When it expires (or on first visit), pull a fresh ID from @ingresso-com.
+ */
+export async function resolveHeroVideoId(): Promise<string> {
+  if (heroVideoRefreshDelayMs() > 0) return peekHeroVideoId();
+  return refreshHeroVideoId();
+}
+
 export async function fetchIngressoFeaturedVideoId(): Promise<string> {
-  const ids = await fetchPinnedChannelVideos(['ingresso-com'], [INGRESSO_FEATURED_FALLBACK_ID], 1);
-  return ids[0] ?? INGRESSO_FEATURED_FALLBACK_ID;
+  return resolveHeroVideoId();
 }
 
 export async function fetchPinnedChannelVideos(
