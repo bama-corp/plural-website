@@ -40,7 +40,7 @@ const faqData = [
   {
     question: 'A Plural tem Netflix?',
     answer:
-      'Sim. Há Netflix no catálogo IPTV e dois pacotes só Netflix: ROOM a 5.000 Kz e SOLO a 16.500 Kz.',
+      'Sim. Há Netflix no catálogo de streaming TV ao vivo e dois pacotes só Netflix: ROOM a 5.000 Kz e SOLO a 16.500 Kz.',
   },
   {
     question: 'Qual a diferença entre ROOM e SOLO?',
@@ -60,7 +60,7 @@ const faqData = [
   {
     question: 'A Netflix na Plural está em 4K?',
     answer:
-      'No catálogo IPTV, o ULTIMATE vai até 4K. Nos pacotes Netflix ROOM e SOLO também. O BÁSICO fica em HD/FHD.',
+      'No catálogo de streaming TV ao vivo, o ULTIMATE vai até 4K. Nos pacotes Netflix ROOM e SOLO também. O BÁSICO fica em HD/FHD.',
   },
   {
     question: 'Os lançamentos da Netflix aparecem?',

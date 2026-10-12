@@ -1,6 +1,6 @@
-# Plural - Site IPTV Premium
+# Plural - Site de streaming TV ao vivo Premium
 
-Site moderno e responsivo para a empresa Plural, especializada em serviços IPTV de alta qualidade.
+Site moderno e responsivo para a empresa Plural, especializada em serviços de streaming TV ao vivo de alta qualidade.
 
 ## 🚀 Tecnologias Utilizadas
 

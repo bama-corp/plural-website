@@ -28,7 +28,8 @@ const Hero = () => {
           <h1 className="!text-[clamp(2.75rem,8vw,6.5rem)] font-extrabold leading-[0.92] tracking-[-0.04em] text-white">
             Mais do que
             <br />
-            só um <span className="italic font-light">IPTV.</span>
+            só um{' '}
+            <span className="italic font-light">streaming TV ao vivo.</span>
           </h1>
           <p className="mx-auto mt-8 max-w-xl text-lg sm:text-xl text-white/75 font-light leading-relaxed">
             A Plural leva filmes, séries e canais ao vivo até ti — estável,

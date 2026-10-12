@@ -88,7 +88,7 @@ const About = () => {
               O sítio certo no ecrã.
             </h2>
             <p className="mt-5 text-white/55 leading-relaxed">
-              Ser a referência em IPTV em Angola — de Luanda a Benguela, de
+              Ser a referência em streaming TV ao vivo em Angola — de Luanda a Benguela, de
               Huambo ao resto do país — com qualidade, inovação e uma equipa
               que não desaparece depois da instalação.
             </p>

@@ -90,7 +90,7 @@ const Footer = () => {
               <img src={pluralWordmark} alt="plural" className="h-5 w-auto object-contain" />
             </Link>
             <p className="text-sm text-white/40 leading-relaxed">
-              IPTV premium para Angola.
+              Streaming TV ao vivo premium para Angola.
             </p>
           </div>
 

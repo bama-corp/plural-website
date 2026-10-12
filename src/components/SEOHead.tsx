@@ -5,7 +5,7 @@ const SEOHead = () => {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "Plural",
-    "description": "IPTV Premium Angola com mais de 5.000 canais, filmes e séries",
+    "description": "Streaming TV ao vivo premium em Angola com mais de 5.000 canais, filmes e séries",
     "url": "https://plural.ao",
     "logo": "https://plural.ao/favicon.png",
     "contactPoint": {
@@ -24,8 +24,8 @@ const SEOHead = () => {
     ],
     "offers": {
       "@type": "Offer",
-      "name": "IPTV Premium Angola",
-      "description": "Serviço de IPTV com mais de 5.000 canais, filmes e séries",
+      "name": "Streaming TV ao vivo Premium Angola",
+      "description": "Serviço de streaming TV ao vivo com mais de 5.000 canais, filmes e séries",
       "category": "Entertainment",
       "availability": "https://schema.org/InStock"
     }
@@ -34,8 +34,8 @@ const SEOHead = () => {
   const serviceSchema = {
     "@context": "https://schema.org",
     "@type": "Service",
-    "name": "IPTV Premium Angola",
-    "description": "Serviço de streaming IPTV com mais de 5.000 canais, filmes e séries",
+    "name": "Streaming TV ao vivo Premium Angola",
+    "description": "Serviço de streaming TV ao vivo com mais de 5.000 canais, filmes e séries",
     "provider": {
       "@type": "Organization",
       "name": "Plural"
@@ -47,8 +47,8 @@ const SEOHead = () => {
     "serviceType": "Entertainment Streaming",
     "offers": {
       "@type": "Offer",
-      "name": "Planos IPTV",
-      "description": "Planos mensais, trimestrais e anuais para IPTV",
+      "name": "Planos de streaming TV ao vivo",
+      "description": "Planos mensais, trimestrais e anuais para streaming TV ao vivo",
       "availability": "https://schema.org/InStock"
     }
   };
@@ -56,9 +56,9 @@ const SEOHead = () => {
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "Plural IPTV Angola",
+    "name": "Plural Streaming TV ao vivo Angola",
     "url": "https://plural.ao",
-    "description": "IPTV Premium Angola com mais de 5.000 canais, filmes e séries",
+    "description": "Streaming TV ao vivo premium em Angola com mais de 5.000 canais, filmes e séries",
     "publisher": {
       "@type": "Organization",
       "name": "Plural"

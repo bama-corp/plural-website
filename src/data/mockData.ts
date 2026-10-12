@@ -128,7 +128,7 @@ export const categories: Category[] = [
 export const faqs: FAQ[] = [
   {
     id: '1',
-    question: 'Como instalar o IPTV da Plural?',
+    question: 'Como instalar o streaming TV ao vivo da Plural?',
     answer:
       'O processo é simples! Após a assinatura, você receberá as credenciais de acesso e instruções detalhadas de instalação para seu dispositivo. Nossa equipe também oferece suporte remoto para instalação.',
     category: 'installation',
@@ -173,14 +173,14 @@ export const faqs: FAQ[] = [
 export const blogPosts: BlogPost[] = [
   {
     id: '1',
-    title: 'Como escolher o melhor plano IPTV para você',
+    title: 'Como escolher o melhor plano de streaming TV ao vivo para você',
     excerpt:
       'Descubra qual plano da Plural se adapta melhor às suas necessidades de entretenimento.',
     content: 'Conteúdo completo do blog...',
     image: '/blog/planos-iptv.jpg',
     date: '2024-01-15',
     author: 'Equipe Plural',
-    tags: ['planos', 'iptv', 'dicas'],
+    tags: ['planos', 'streaming', 'dicas'],
   },
   {
     id: '2',
@@ -195,9 +195,9 @@ export const blogPosts: BlogPost[] = [
   },
   {
     id: '3',
-    title: 'Configurando sua Smart TV para IPTV',
+    title: 'Configurando sua Smart TV para streaming TV ao vivo',
     excerpt:
-      'Guia passo a passo para configurar o IPTV da Plural em sua Smart TV.',
+      'Guia passo a passo para configurar o streaming TV ao vivo da Plural em sua Smart TV.',
     content: 'Conteúdo completo do blog...',
     image: '/blog/smart-tv-config.jpg',
     date: '2024-01-05',

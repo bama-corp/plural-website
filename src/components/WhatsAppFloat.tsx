@@ -8,7 +8,7 @@ const WhatsAppFloat = () => {
 
   const quickMessages = [
     'Olá! Gostaria de saber mais sobre os planos da Plural!',
-    'Preciso de ajuda com a instalação do IPTV.',
+    'Preciso de ajuda com a instalação do streaming TV ao vivo.',
     'Quero assinar um plano agora!',
     'Preciso de suporte técnico urgente.',
   ];

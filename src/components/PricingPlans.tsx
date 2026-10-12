@@ -149,7 +149,7 @@ const FamilyBoard = ({
             />
           </>
         ) : (
-          <h3 className="!text-3xl font-extrabold tracking-[-0.03em] text-white">
+          <h3 className="!text-2xl sm:!text-3xl font-extrabold leading-[0.95] tracking-[-0.03em] text-white">
             {title}
           </h3>
         )}
@@ -271,7 +271,7 @@ const PricingPlans = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 max-w-5xl mx-auto items-stretch">
           <FamilyBoard
-            title="IPTV"
+            title="STREAMING TV AO VIVO"
             packs={iptvPackages}
             selectedId={iptvId}
             onSelect={setIptvId}
